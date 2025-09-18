@@ -399,7 +399,11 @@ export default function PropertyForm({ action, options }) {
 
   return (
     <FormProvider {...methods}>
-      <form ref={formRef} action={action} className="max-w-3xl space-y-6">
+      <form
+        ref={formRef}
+        action={action}
+        className="max-w-3xl mx-auto space-y-6"
+      >
         <Tabs value={tab} onValueChange={setTab}>
           <TabsList className="grid grid-cols-3 w-full">
             <TabsTrigger value="basics">Basics</TabsTrigger>
