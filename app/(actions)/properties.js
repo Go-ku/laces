@@ -2,7 +2,7 @@
 
 import { revalidatePath, redirect } from "next/navigation";
 import { z } from "zod";
-// import { connectDB } from "@/lib/db";
+import { connectDB } from "@/lib/db";
 import Property from "@/lib/models/Property";
 
 // helpers
@@ -62,9 +62,11 @@ const propertySchema = z
   });
 
 export async function createProperty(formData) {
+  console.log("in create prop function");
   const raw = Object.fromEntries(formData.entries()); // grab everything
 
   const parsed = propertySchema.safeParse(raw);
+  console.log(parsed);
   if (!parsed.success) {
     const errors = {};
     for (const issue of parsed.error.issues) {
@@ -75,7 +77,7 @@ export async function createProperty(formData) {
   }
 
   try {
-    // await connectDB();
+    await connectDB();
 
     await Property.create({
       name: parsed.data.name.trim(),
@@ -106,6 +108,7 @@ export async function createProperty(formData) {
       bedrooms: parsed.data.bedrooms ? Number(parsed.data.bedrooms) : undefined,
       propertyType: parsed.data.propertyType,
     });
+    console.log("end of new prop action");
   } catch (e) {
     console.error(e);
     return {
