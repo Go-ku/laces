@@ -30,9 +30,10 @@ function computeNextDueDate(startDate, dueDay) {
 }
 
 export async function createLease(formData) {
+  console.log("in create lease now");
   const raw = Object.fromEntries(formData.entries());
   const parsed = leaseCreateSchema.safeParse(raw);
-
+  console.log("data from form", raw);
   if (!parsed.success) {
     const errors = {};
     for (const i of parsed.error.issues) errors[i.path[0]] = i.message;
@@ -48,7 +49,7 @@ export async function createLease(formData) {
   ]);
   if (!prop) return { ok: false, errors: { propertyId: "Property not found" } };
   if (!ten) return { ok: false, errors: { tenantId: "Tenant not found" } };
-
+  console.log(prop, ten);
   const nextDueDate = computeNextDueDate(
     parsed.data.startDate,
     parsed.data.dueDay
@@ -74,7 +75,8 @@ export async function createLease(formData) {
     status: "active",
     nextDueDate,
   });
-
+  console.log(parsed.data);
+  console.log(nextDueDate);
   revalidatePath("/leases");
   redirect("/leases?created=1");
 }

@@ -1,6 +1,7 @@
 "use server";
 
-import { revalidatePath, redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 import { connectDB } from "@/lib/db";
 import Property from "@/lib/models/Property";

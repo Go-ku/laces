@@ -1,11 +1,13 @@
 import { connectDB } from "@/lib/db";
 import Tenant from "@/lib/models/Tenant";
 import TenantForm from "@/app/tenants/new/TenantForm";
-import { updateTenant } from "@/app/(actions)/tenants.update";
+import { updateTenant } from "@/app/(actions)/tenants";
 
 export default async function EditTenantPage({ params }) {
   await connectDB();
-  const t = await Tenant.findById(params.id).lean();
+  const { id } = await params;
+  const t = await Tenant.findById(id).lean();
+  console.log(t);
   if (!t) return <div className="p-6">Tenant not found.</div>;
 
   const initial = {
@@ -22,7 +24,7 @@ export default async function EditTenantPage({ params }) {
   // wrap the server action to bind id; form will call action(formData)
   async function action(formData) {
     "use server";
-    return updateTenant(params.id, formData);
+    return updateTenant(id, formData);
   }
 
   return <TenantForm action={action} initialData={initial} mode="edit" />;

@@ -35,7 +35,7 @@ const formSchema = z.object({
   employer: z.string().optional(),
 });
 
-export default function TenantForm({ action }) {
+export default function TenantForm({ action, initialData, mode = "create" }) {
   const formRef = useRef(null);
 
   const {
@@ -44,7 +44,7 @@ export default function TenantForm({ action }) {
     formState: { errors, isSubmitting },
   } = useForm({
     resolver: zodResolver(formSchema),
-    defaultValues: {
+    defaultValues: initialData || {
       name: "",
       nrc: "",
       permanentAddress: "",
@@ -125,7 +125,13 @@ export default function TenantForm({ action }) {
         onClick={handleSubmit(onValid)}
         disabled={pending || isSubmitting}
       >
-        {pending || isSubmitting ? "Saving…" : "Create Tenant"}
+        {pending || isSubmitting
+          ? mode === "edit"
+            ? "Updating…"
+            : "Saving…"
+          : mode === "edit"
+          ? "Update Tenant"
+          : "Create Tenant"}
       </Button>
     </form>
   );
